@@ -32,6 +32,13 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 }
 
+export const metadata: Metadata = {
+  title: 'File Your Unemployment Claim Online — Free AI Guide for All 50 States',
+  description: 'File an unemployment claim in your state with step-by-step AI guidance. Check eligibility, find your state portal, and get help fast. Free, private, no signup.',
+  keywords: ['unemployment claim', 'file unemployment claim', 'unemployment insurance claim', 'how to file for unemployment'],
+  ...
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${dmSans.variable} ${dmSerif.variable}`}>
