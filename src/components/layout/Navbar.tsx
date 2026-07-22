@@ -3,7 +3,11 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
-export default function Navbar() {
+type Props = {
+  onOpenFeedback?: () => void
+}
+
+export default function Navbar({ onOpenFeedback }: Props) {
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
@@ -35,16 +39,32 @@ export default function Navbar() {
             {label}
           </a>
         ))}
+        {onOpenFeedback && (
+          <button type="button" onClick={onOpenFeedback} className="nav-link text-sm">
+            Feedback
+          </button>
+        )}
       </div>
 
       {/* CTA */}
-      <a
-        href="#eligibility"
-        className="text-sm font-semibold text-white bg-mint-500 px-5 py-2 rounded-xl
-                   hover:bg-mint-600 transition-colors hover:-translate-y-0.5 transform duration-200"
-      >
-        Check eligibility →
-      </a>
+      <div className="flex items-center gap-2">
+        {onOpenFeedback && (
+          <button
+            type="button"
+            onClick={onOpenFeedback}
+            className="text-sm font-semibold text-white border border-white/25 px-4 py-2 rounded-xl hover:bg-white/10 transition-colors"
+          >
+            Feedback
+          </button>
+        )}
+        <a
+          href="#eligibility"
+          className="text-sm font-semibold text-white bg-mint-500 px-5 py-2 rounded-xl
+                     hover:bg-mint-600 transition-colors hover:-translate-y-0.5 transform duration-200"
+        >
+          Check eligibility →
+        </a>
+      </div>
     </nav>
   )
 }
