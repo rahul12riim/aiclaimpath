@@ -21,7 +21,7 @@ type Feedback = {
 export default function FeedbackPage() {
   const [list, setList] = useState<Feedback[]>([])
   const [loading, setLoading] = useState(true)
-  const [form, setForm] = useState({ name: '', email: '', organisation: '', message: '' })
+  const [form, setForm] = useState({ name: '', organisation: '', message: '' })
   const [status, setStatus] = useState<'idle' | 'sending' | 'done'>('idle')
   const [error, setError] = useState<string | null>(null)
   const [loadError, setLoadError] = useState<string | null>(null)
@@ -61,16 +61,16 @@ export default function FeedbackPage() {
     setStatus('sending')
     const { error } = await supabase.from('feedback').insert({
       name: form.name.trim() || null,
-      email: form.email.trim() || null,
       organisation: form.organisation.trim() || null,
       message: form.message.trim(),
     })
     if (error) {
+      console.error('Submit error:', error)
       setError('Could not submit — please try again.')
       setStatus('idle')
       return
     }
-    setForm({ name: '', email: '', organisation: '', message: '' })
+    setForm({ name: '', organisation: '', message: '' })
     setStatus('done')
     load()
     setTimeout(() => setStatus('idle'), 3000)
@@ -89,7 +89,7 @@ export default function FeedbackPage() {
         <p className="section-label mb-3" style={{ color: '#0EA572' }}>Your voice</p>
         <h1 className="font-serif text-4xl lg:text-5xl text-white mb-4">Share your feedback</h1>
         <p className="text-white/60 max-w-lg mx-auto">
-          Tell us how AIWorkforce helped, or what we can do better.
+          Tell us how AIClaimPath helped, or what we can do better.
         </p>
       </section>
 
@@ -103,11 +103,9 @@ export default function FeedbackPage() {
           <div className="grid sm:grid-cols-2 gap-4">
             <input value={form.name} onChange={set('name')} placeholder="Name"
               className="rounded-xl border border-gray-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-mint-400" />
-            <input value={form.email} onChange={set('email')} type="email" placeholder="Email"
+            <input value={form.organisation} onChange={set('organisation')} placeholder="Organisation"
               className="rounded-xl border border-gray-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-mint-400" />
           </div>
-          <input value={form.organisation} onChange={set('organisation')} placeholder="Organisation"
-            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-mint-400" />
           <textarea value={form.message} onChange={set('message')} rows={4} maxLength={1000}
             placeholder="Your feedback"
             className="w-full rounded-xl border border-gray-200 px-4 py-3 resize-none focus:outline-none focus:ring-2 focus:ring-mint-400" />
