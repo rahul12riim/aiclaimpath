@@ -26,14 +26,15 @@ export default function Navbar() {
       {/* Nav links - desktop */}
       <div className="hidden md:flex items-center gap-8">
         {[
-          { href: '#states', label: 'By state' },
-          { href: '#chat', label: 'AI guide' },
-          { href: '#eligibility', label: 'Check eligibility' },
-          { href: '#features', label: 'Features' },
+          { href: '/#states', label: 'By state' },
+          { href: '/#chat', label: 'AI guide' },
+          { href: '/#eligibility', label: 'Check eligibility' },
+          { href: '/#features', label: 'Features' },
+          { href: '/feedback', label: 'Feedback' },
         ].map(({ href, label }) => (
-          <a key={href} href={href} className="nav-link text-sm">
+          <Link key={href} href={href} className="nav-link text-sm">
             {label}
-          </a>
+          </Link>
         ))}
       </div>
 
