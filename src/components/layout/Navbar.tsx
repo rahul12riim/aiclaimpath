@@ -2,9 +2,12 @@
 // src/components/layout/Navbar.tsx
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
+  const pathname = usePathname()
+  const sectionHref = (hash: `#${string}`) => (pathname === '/' ? hash : `/${hash}`)
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20)
@@ -26,25 +29,26 @@ export default function Navbar() {
       {/* Nav links - desktop */}
       <div className="hidden md:flex items-center gap-8">
         {[
-          { href: '#states', label: 'By state' },
-          { href: '#chat', label: 'AI guide' },
-          { href: '#eligibility', label: 'Check eligibility' },
-          { href: '#features', label: 'Features' },
+          { href: sectionHref('#states'), label: 'By state' },
+          { href: sectionHref('#chat'), label: 'AI guide' },
+          { href: sectionHref('#eligibility'), label: 'Check eligibility' },
+          { href: sectionHref('#features'), label: 'Features' },
+          { href: '/feedback', label: 'Feedback' },
         ].map(({ href, label }) => (
-          <a key={href} href={href} className="nav-link text-sm">
+          <Link key={href} href={href} className="nav-link text-sm">
             {label}
-          </a>
+          </Link>
         ))}
       </div>
 
       {/* CTA */}
-      <a
-        href="#eligibility"
+      <Link
+        href={sectionHref('#eligibility')}
         className="text-sm font-semibold text-white bg-mint-500 px-5 py-2 rounded-xl
-                   hover:bg-mint-600 transition-colors hover:-translate-y-0.5 transform duration-200"
+                 hover:bg-mint-600 transition-colors hover:-translate-y-0.5 transform duration-200"
       >
         Check eligibility →
-      </a>
+      </Link>
     </nav>
   )
 }
