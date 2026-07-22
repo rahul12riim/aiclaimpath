@@ -24,15 +24,31 @@ export default function FeedbackPage() {
   const [form, setForm] = useState({ name: '', email: '', organisation: '', message: '' })
   const [status, setStatus] = useState<'idle' | 'sending' | 'done'>('idle')
   const [error, setError] = useState<string | null>(null)
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   async function load() {
-    const { data } = await supabase
-      .from('feedback')
-      .select('id, name, organisation, message, created_at')
-      .order('created_at', { ascending: false })
-      .limit(100)
-    setList(data ?? [])
-    setLoading(false)
+    try {
+      setLoadError(null)
+      const { data, error } = await supabase
+        .from('feedback')
+        .select('id, name, organisation, message, created_at')
+        .order('created_at', { ascending: false })
+        .limit(100)
+      
+      if (error) {
+        console.error('Supabase error:', error)
+        setLoadError('Could not load feedback. Please check console.')
+        setList([])
+      } else {
+        setList(data ?? [])
+      }
+    } catch (err) {
+      console.error('Load error:', err)
+      setLoadError('Failed to load feedback')
+      setList([])
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => { load() }, [])
@@ -104,6 +120,9 @@ export default function FeedbackPage() {
       <section className="px-6 py-16">
         <div className="max-w-2xl mx-auto">
           <h2 className="font-serif text-2xl text-navy-900 mb-6">What people are saying</h2>
+          {loadError && (
+            <p className="text-red-500 text-center py-4 text-sm bg-red-50 rounded-lg p-3">{loadError}</p>
+          )}
           {loading ? (
             <p className="text-gray-400 text-center py-12">Loading…</p>
           ) : list.length === 0 ? (
@@ -135,4 +154,3 @@ export default function FeedbackPage() {
     </main>
   )
 }
-
