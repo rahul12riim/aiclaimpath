@@ -35,6 +35,9 @@ export default function Navbar() {
             {label}
           </a>
         ))}
+        <Link href="/feedback" className="nav-link text-sm">
+          Feedback
+        </Link>
       </div>
 
       {/* CTA */}
