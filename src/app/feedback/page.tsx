@@ -51,7 +51,9 @@ export default function FeedbackPage() {
     }
   }
 
-  useEffect(() => { load() }, [])
+  useEffect(() => { 
+    load() 
+  }, [])
 
   async function submit() {
     setError(null)
