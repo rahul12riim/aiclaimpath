@@ -119,7 +119,7 @@ export default function EligibilityChecker({ preselectedState }: Props) {
               className="w-4 h-4 accent-mint-500"
             />
             <label htmlFor="available" className="text-sm text-gray-700">
-              I'm available and actively looking for work
+              I&apos;m available and actively looking for work
             </label>
           </div>
 

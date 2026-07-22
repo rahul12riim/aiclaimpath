@@ -11,14 +11,6 @@ import FeatureGrid from '@/components/ui/FeatureGrid'
 import Footer from '@/components/layout/Footer'
 import FeedbackModal from '@/components/ui/FeedbackModal'
 
-// ...then in the JSX, before <Footer />:
-<section className="py-16 px-6 bg-gray-50">
-  <div className="max-w-6xl mx-auto flex flex-col items-center">
-    <p className="section-label mb-3">Help us improve</p>
-    <FeedbackModal />
-  </div>
-</section>
-
 // Stable session ID for rate limiting (not stored, not linked to identity)
 const SESSION_ID = uuidv4()
 
@@ -47,7 +39,7 @@ export default function Home() {
             <p className="section-label mb-3">Step 1</p>
             <h2 className="section-h2 mb-4">Select your state</h2>
             <p className="text-lg text-gray-500 max-w-xl mx-auto">
-              We'll show your exact benefit amount, deadlines, and direct portal link.
+              We&apos;ll show your exact benefit amount, deadlines, and direct portal link.
             </p>
           </div>
           <StatePicker selected={selectedState} onSelect={handleStateSelect} onStartChat={handleStartChat} />
@@ -64,7 +56,7 @@ export default function Home() {
                 Chat with your AI guide
               </h2>
               <p className="text-white/60 max-w-lg mx-auto">
-                I'll walk you through everything — what to gather, what each question means, and when you're ready to file.
+                I&apos;ll walk you through everything — what to gather, what each question means, and when you&apos;re ready to file.
               </p>
             </div>
             <ChatWindow stateId={selectedState} sessionId={SESSION_ID} />
@@ -97,6 +89,20 @@ export default function Home() {
             </h2>
           </div>
           <FeatureGrid />
+        </div>
+      </section>
+
+      {/* Feedback CTA */}
+      <section id="feedback" className="py-16 px-6 bg-white">
+        <div className="max-w-6xl mx-auto flex flex-col items-center text-center">
+          <p className="section-label mb-3">Help us improve</p>
+          <h2 className="section-h2 mb-4">
+            Your voice matters
+          </h2>
+          <p className="text-lg text-gray-500 max-w-xl mx-auto mb-8">
+            Share what&apos;s working, what could be better, or any other thoughts. We read every message.
+          </p>
+          <FeedbackModal />
         </div>
       </section>
 

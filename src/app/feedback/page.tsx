@@ -1,175 +1,199 @@
 'use client'
-// src/components/ui/FeedbackModal.tsx
-import { useState } from 'react'
-import * as Dialog from '@radix-ui/react-dialog'
-import { MessageSquare, X, CheckCircle2 } from 'lucide-react'
-import { createClient } from '@supabase/supabase-js'
+// src/app/feedback/page.tsx — public feedback listing page (review style)
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { ArrowLeft, MessageSquare } from 'lucide-react'
+import FeedbackModal from '@/components/ui/FeedbackModal'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+interface FeedbackItem {
+  id: string
+  name: string
+  department: string
+  message: string
+  created_at: string
+}
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+function formatDate(iso: string): string {
+  const d = new Date(iso)
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+}
 
-type Status = 'idle' | 'sending' | 'done'
-type Errors = Partial<Record<'name' | 'email' | 'message', string>>
+function InitialAvatar({ name }: { name: string }) {
+  const initials = name
+    .split(' ')
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase() ?? '')
+    .join('')
 
-const inputCls =
-  'w-full rounded-xl border border-gray-200 px-4 py-2.5 text-navy-900 placeholder-gray-400 ' +
-  'focus:outline-none focus:ring-2 focus:ring-mint-400'
-
-export default function FeedbackModal() {
-  const [open, setOpen] = useState(false)
-  const [status, setStatus] = useState<Status>('idle')
-  const [form, setForm] = useState({ name: '', email: '', message: '' })
-  const [errors, setErrors] = useState<Errors>({})
-
-  function reset() {
-    setStatus('idle')
-    setForm({ name: '', email: '', message: '' })
-    setErrors({})
-  }
-
-  function onOpenChange(next: boolean) {
-    setOpen(next)
-    if (!next) setTimeout(reset, 200) // reset after close animation
-  }
-
-  function validate(): boolean {
-    const e: Errors = {}
-    if (!form.name.trim()) e.name = 'Please enter your name.'
-    if (!form.email.trim()) e.email = 'Please enter your email.'
-    else if (!EMAIL_RE.test(form.email)) e.email = 'Enter a valid email address.'
-    if (!form.message.trim()) e.message = 'Please share your feedback.'
-    setErrors(e)
-    return Object.keys(e).length === 0
-  }
-
-  async function submit() {
-    if (!validate()) return
-    setStatus('sending')
-    const { error } = await supabase.from('feedback').insert({
-      name: form.name.trim(),
-      email: form.email.trim(),
-      message: form.message.trim(),
-    })
-    if (error) {
-      console.error('Feedback submit error:', error)
-      setErrors({ message: 'Could not submit — please try again.' })
-      setStatus('idle')
-      return
-    }
-    setStatus('done')
-  }
-
-  const set =
-    (k: keyof typeof form) =>
-    (ev: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setForm((f) => ({ ...f, [k]: ev.target.value }))
-      if (errors[k]) setErrors((e) => ({ ...e, [k]: undefined }))
-    }
+  const colors = [
+    'bg-mint-500',
+    'bg-blue-500',
+    'bg-purple-500',
+    'bg-orange-500',
+    'bg-pink-500',
+    'bg-indigo-500',
+  ]
+  const color = colors[name.charCodeAt(0) % colors.length]
 
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      {/* ── Trigger box (place anywhere on the page) ── */}
-      <Dialog.Trigger asChild>
-        <button className="card group inline-flex items-center gap-3 p-4 text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-mint-300 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-mint-400 focus:ring-offset-2">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-mint-50 text-mint-500 transition-colors group-hover:bg-mint-500 group-hover:text-white">
-            <MessageSquare size={20} />
-          </span>
-          <span>
-            <span className="block text-sm font-semibold text-navy-900">Share feedback</span>
-            <span className="block text-xs text-gray-500">Tell us how we can improve</span>
-          </span>
-        </button>
-      </Dialog.Trigger>
-
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-navy-900/50 backdrop-blur-sm data-[state=open]:animate-fade-up" />
-        <Dialog.Content className="card fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 p-6 shadow-xl focus:outline-none sm:p-7">
-          <Dialog.Close
-            aria-label="Close"
-            className="absolute right-4 top-4 rounded-lg p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
-          >
-            <X size={20} />
-          </Dialog.Close>
-
-          {status === 'done' ? (
-            <div className="py-6 text-center">
-              <CheckCircle2 className="mx-auto text-mint-500" size={48} />
-              <Dialog.Title className="mt-4 font-serif text-2xl text-navy-900">Thank you</Dialog.Title>
-              <Dialog.Description className="mt-1 text-sm text-gray-500">
-                Your feedback has been received. We read every message.
-              </Dialog.Description>
-              <button onClick={() => onOpenChange(false)} className="btn-primary mt-6 justify-center">
-                Done
-              </button>
-            </div>
-          ) : (
-            <>
-              <Dialog.Title className="font-serif text-2xl text-navy-900">Share your feedback</Dialog.Title>
-              <Dialog.Description className="mt-1 text-sm text-gray-500">
-                We'd love to hear what's working and what isn't.
-              </Dialog.Description>
-
-              <div className="mt-5 space-y-4">
-                <Field label="Name" error={errors.name}>
-                  <input value={form.name} onChange={set('name')} placeholder="Your name" className={inputCls} />
-                </Field>
-
-                <Field label="Email" error={errors.email}>
-                  <input
-                    type="email"
-                    value={form.email}
-                    onChange={set('email')}
-                    placeholder="you@example.com"
-                    className={inputCls}
-                  />
-                </Field>
-
-                <Field label="Feedback" error={errors.message}>
-                  <textarea
-                    value={form.message}
-                    onChange={set('message')}
-                    rows={4}
-                    maxLength={1000}
-                    placeholder="What's on your mind?"
-                    className={inputCls + ' resize-none'}
-                  />
-                </Field>
-
-                <button
-                  type="button"
-                  onClick={submit}
-                  disabled={status === 'sending'}
-                  className="btn-primary w-full justify-center disabled:opacity-60"
-                >
-                  {status === 'sending' ? 'Sending…' : 'Send feedback'}
-                </button>
-              </div>
-            </>
-          )}
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+    <div
+      className={`${color} flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white`}
+      aria-hidden="true"
+    >
+      {initials || '?'}
+    </div>
   )
 }
 
-function Field({
-  label,
-  error,
-  children,
-}: {
-  label: string
-  error?: string
-  children: React.ReactNode
-}) {
+function FeedbackCard({ item }: { item: FeedbackItem }) {
   return (
-    <label className="block">
-      <span className="mb-1.5 block text-sm font-medium text-navy-900">{label}</span>
-      {children}
-      {error && <span className="mt-1 block text-xs text-red-500">{error}</span>}
-    </label>
+    <article className="card p-5 shadow-sm transition-shadow hover:shadow-md">
+      <div className="flex items-start gap-3">
+        <InitialAvatar name={item.name} />
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-semibold text-navy-900">{item.name}</span>
+            <span className="inline-block rounded-full bg-mint-50 px-2.5 py-0.5 text-xs font-medium text-mint-600">
+              {item.department}
+            </span>
+          </div>
+          <time
+            dateTime={item.created_at}
+            className="mt-0.5 block text-xs text-gray-400"
+          >
+            {formatDate(item.created_at)}
+          </time>
+        </div>
+      </div>
+      <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
+        {item.message}
+      </p>
+    </article>
+  )
+}
+
+function SkeletonCard() {
+  return (
+    <div className="card p-5 animate-pulse">
+      <div className="flex items-start gap-3">
+        <div className="h-10 w-10 shrink-0 rounded-full bg-gray-200" />
+        <div className="flex-1 space-y-2">
+          <div className="h-4 w-1/3 rounded bg-gray-200" />
+          <div className="h-3 w-1/4 rounded bg-gray-100" />
+        </div>
+      </div>
+      <div className="mt-3 space-y-2">
+        <div className="h-3 w-full rounded bg-gray-100" />
+        <div className="h-3 w-5/6 rounded bg-gray-100" />
+        <div className="h-3 w-4/6 rounded bg-gray-100" />
+      </div>
+    </div>
+  )
+}
+
+export default function FeedbackPage() {
+  const [items, setItems] = useState<FeedbackItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const res = await fetch('/api/feedback')
+        if (!res.ok) {
+          const data = (await res.json()) as { error?: string }
+          setError(data.error ?? 'Failed to load feedback.')
+          return
+        }
+        const data = (await res.json()) as { feedback: FeedbackItem[] }
+        setItems(data.feedback)
+      } catch {
+        setError('Network error — please check your connection.')
+      } finally {
+        setLoading(false)
+      }
+    }
+    load()
+  }, [])
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-[#060F1A] px-6 py-5 shadow-md">
+        <div className="mx-auto flex max-w-4xl items-center justify-between gap-4">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-white"
+          >
+            <ArrowLeft size={16} aria-hidden="true" />
+            Back home
+          </Link>
+          <div className="font-serif text-xl text-white">AIWorkforce</div>
+          <FeedbackModal />
+        </div>
+      </header>
+
+      {/* Hero */}
+      <div className="bg-[#060F1A] px-6 pb-16 pt-8 text-center">
+        <div className="mx-auto max-w-2xl">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-mint-500/10 border border-mint-500/25 px-4 py-1.5">
+            <MessageSquare size={14} className="text-mint-400" aria-hidden="true" />
+            <span className="text-sm text-mint-400 font-medium">Community feedback</span>
+          </div>
+          <h1 className="font-serif text-4xl text-white mb-3">What our users say</h1>
+          <p className="text-white/55 text-lg">
+            Real feedback from people who used AIWorkforce to file their unemployment claims.
+          </p>
+        </div>
+      </div>
+
+      {/* Content */}
+      <main className="mx-auto max-w-4xl px-6 py-12">
+        {loading && (
+          <div className="grid gap-4 sm:grid-cols-2" aria-busy="true" aria-label="Loading feedback">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+        )}
+
+        {!loading && error && (
+          <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center" role="alert">
+            <p className="text-red-600">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="btn-primary mt-4 justify-center"
+            >
+              Retry
+            </button>
+          </div>
+        )}
+
+        {!loading && !error && items.length === 0 && (
+          <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center shadow-sm">
+            <MessageSquare size={40} className="mx-auto text-gray-300 mb-4" aria-hidden="true" />
+            <h2 className="font-serif text-2xl text-navy-900 mb-2">No feedback yet</h2>
+            <p className="text-gray-500 mb-6">Be the first to share your experience.</p>
+            <FeedbackModal />
+          </div>
+        )}
+
+        {!loading && !error && items.length > 0 && (
+          <>
+            <p className="mb-6 text-sm text-gray-500">
+              {items.length} {items.length === 1 ? 'review' : 'reviews'} · sorted by newest first
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {items.map((item) => (
+                <FeedbackCard key={item.id} item={item} />
+              ))}
+            </div>
+            <div className="mt-10 text-center">
+              <FeedbackModal />
+            </div>
+          </>
+        )}
+      </main>
+    </div>
   )
 }
