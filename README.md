@@ -86,9 +86,13 @@ Re-run weekly to keep knowledge current (use the provided GitHub Actions cron jo
 
 ## Deploying to Vercel
 
+> **Important:** The repository must be deployed via Vercel with the project linked to `rahul12riim/aiclaimpath`.
+> A `vercel.json` is included at the repo root with the correct framework settings.
+> All three GitHub Actions secrets (`VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`) must be set for CI/CD deploys to succeed.
+
 ### One-click deploy
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/YOUR_ORG/aiworkforce)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/rahul12riim/aiclaimpath)
 
 ### Manual deploy
 
@@ -101,10 +105,22 @@ vercel env add ANTHROPIC_API_KEY
 vercel --prod
 ```
 
+### Vercel project settings
+
+| Setting | Value |
+|---|---|
+| Framework Preset | **Next.js** |
+| Root Directory | `.` (repo root) |
+| Build Command | `npm run build` |
+| Install Command | `npm ci` |
+| Output Directory | `.next` (auto-detected) |
+
+These are also encoded in `vercel.json` at the repo root so they apply automatically on Vercel.
+
 ### Connect your domain
 
 1. In Vercel dashboard → Settings → Domains
-2. Add `aiworkforce.com`
+2. Add `aiclaimpath.com` (or your custom domain)
 3. Update DNS at your registrar:
    - `A` record → `76.76.21.21`
    - `CNAME www` → `cname.vercel-dns.com`
@@ -124,6 +140,17 @@ vercel --prod
 | `NEXT_PUBLIC_SUPABASE_URL` | supabase.com/dashboard |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | supabase.com/dashboard |
 | `SUPABASE_SERVICE_ROLE_KEY` | supabase.com/dashboard |
+
+### Verifying `/feedback` after deploy
+
+Once deployed, confirm the route is live:
+
+```bash
+curl -I https://aiclaimpath.vercel.app/feedback
+# Expect: HTTP/2 200
+```
+
+Or open `https://aiclaimpath.vercel.app/feedback` in a browser — you should see the feedback form, not a Vercel 404.
 
 ---
 

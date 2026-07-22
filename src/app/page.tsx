@@ -38,7 +38,7 @@ export default function Home() {
             <p className="section-label mb-3">Step 1</p>
             <h2 className="section-h2 mb-4">Select your state</h2>
             <p className="text-lg text-gray-500 max-w-xl mx-auto">
-              We'll show your exact benefit amount, deadlines, and direct portal link.
+              We&apos;ll show your exact benefit amount, deadlines, and direct portal link.
             </p>
           </div>
           <StatePicker selected={selectedState} onSelect={handleStateSelect} onStartChat={handleStartChat} />
@@ -55,7 +55,7 @@ export default function Home() {
                 Chat with your AI guide
               </h2>
               <p className="text-white/60 max-w-lg mx-auto">
-                I'll walk you through everything — what to gather, what each question means, and when you're ready to file.
+                I&apos;ll walk you through everything — what to gather, what each question means, and when you&apos;re ready to file.
               </p>
             </div>
             <ChatWindow stateId={selectedState} sessionId={SESSION_ID} />

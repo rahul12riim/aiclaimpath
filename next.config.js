@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: { serverActions: { allowedOrigins: ['aiworkforce.com', 'localhost:3000'] } },
+  experimental: { serverActions: { allowedOrigins: ['aiclaimpath.vercel.app', 'aiclaimpath.com', 'localhost:3000'] } },
   headers: async () => [
     {
       source: '/(.*)',
