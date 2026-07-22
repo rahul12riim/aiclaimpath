@@ -66,7 +66,7 @@ export default function StatePicker({ selected, onSelect, onStartChat }: Props) 
           ))}
           {filtered.length === 0 && (
             <div className="px-6 py-8 text-center text-gray-400 text-sm">
-              No states found for "{query}"
+              No states found for &quot;{query}&quot;
             </div>
           )}
         </div>
@@ -98,7 +98,7 @@ export default function StatePicker({ selected, onSelect, onStartChat }: Props) 
 
             {/* Checklist */}
             <div className="card p-5">
-              <h4 className="font-semibold text-sm text-gray-700 mb-3">What you'll need</h4>
+              <h4 className="font-semibold text-sm text-gray-700 mb-3">What you&apos;ll need</h4>
               <div className="space-y-2">
                 {state.requiredDocs.slice(0, 5).map(doc => (
                   <div key={doc} className="flex items-start gap-2.5">

@@ -110,7 +110,7 @@ export default function FeedbackModal() {
             <>
               <Dialog.Title className="font-serif text-2xl text-navy-900">Share your feedback</Dialog.Title>
               <Dialog.Description className="mt-1 text-sm text-gray-500">
-                We'd love to hear what's working and what isn't.
+                We&apos;d love to hear what&apos;s working and what isn&apos;t.
               </Dialog.Description>
 
               <div className="mt-5 space-y-4">
