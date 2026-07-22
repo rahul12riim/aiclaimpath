@@ -2,9 +2,11 @@
 // src/components/layout/Navbar.tsx
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import FeedbackModal from '@/components/ui/FeedbackModal'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
+  const [feedbackOpen, setFeedbackOpen] = useState(false)
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20)
@@ -13,38 +15,53 @@ export default function Navbar() {
   }, [])
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 px-6 lg:px-10 h-16 flex items-center justify-between
-        transition-all duration-300 ${scrolled ? 'bg-navy-900/95 backdrop-blur-lg shadow-xl' : 'bg-transparent'}`}
-    >
-      {/* Logo */}
-      <Link href="/" className="flex items-center gap-2.5 group">
-        <span className="w-2 h-2 rounded-full bg-mint-500 group-hover:scale-125 transition-transform" />
-        <span className="font-serif text-xl text-white">AIWorkforce</span>
-      </Link>
-
-      {/* Nav links - desktop */}
-      <div className="hidden md:flex items-center gap-8">
-        {[
-          { href: '#states', label: 'By state' },
-          { href: '#chat', label: 'AI guide' },
-          { href: '#eligibility', label: 'Check eligibility' },
-          { href: '#features', label: 'Features' },
-        ].map(({ href, label }) => (
-          <a key={href} href={href} className="nav-link text-sm">
-            {label}
-          </a>
-        ))}
-      </div>
-
-      {/* CTA */}
-      <a
-        href="#eligibility"
-        className="text-sm font-semibold text-white bg-mint-500 px-5 py-2 rounded-xl
-                   hover:bg-mint-600 transition-colors hover:-translate-y-0.5 transform duration-200"
+    <>
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 px-6 lg:px-10 h-16 flex items-center justify-between
+          transition-all duration-300 ${scrolled ? 'bg-navy-900/95 backdrop-blur-lg shadow-xl' : 'bg-transparent'}`}
       >
-        Check eligibility →
-      </a>
-    </nav>
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <span className="w-2 h-2 rounded-full bg-mint-500 group-hover:scale-125 transition-transform" />
+          <span className="font-serif text-xl text-white">AIWorkforce</span>
+        </Link>
+
+        {/* Nav links - desktop */}
+        <div className="hidden md:flex items-center gap-8">
+          {[
+            { href: '#states', label: 'By state' },
+            { href: '#chat', label: 'AI guide' },
+            { href: '#eligibility', label: 'Check eligibility' },
+            { href: '#features', label: 'Features' },
+          ].map(({ href, label }) => (
+            <a key={href} href={href} className="nav-link text-sm">
+              {label}
+            </a>
+          ))}
+        </div>
+
+        {/* Right-side actions */}
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setFeedbackOpen(true)}
+            aria-label="Open feedback"
+            className="text-sm font-semibold text-white/80 border border-white/30 px-4 py-2 rounded-xl
+                       hover:bg-white/10 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-mint-400"
+          >
+            Feedback
+          </button>
+          <a
+            href="#eligibility"
+            className="text-sm font-semibold text-white bg-mint-500 px-5 py-2 rounded-xl
+                       hover:bg-mint-600 transition-colors hover:-translate-y-0.5 transform duration-200"
+          >
+            Check eligibility →
+          </a>
+        </div>
+      </nav>
+
+      <FeedbackModal open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
+    </>
   )
 }
