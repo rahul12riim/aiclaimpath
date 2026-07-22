@@ -9,6 +9,7 @@ import EligibilityChecker from '@/components/ui/EligibilityChecker'
 import ChatWindow from '@/components/chat/ChatWindow'
 import FeatureGrid from '@/components/ui/FeatureGrid'
 import Footer from '@/components/layout/Footer'
+import FeedbackModal from '@/components/feedback/FeedbackModal'
 
 // Stable session ID for rate limiting (not stored, not linked to identity)
 const SESSION_ID = uuidv4()
@@ -16,6 +17,7 @@ const SESSION_ID = uuidv4()
 export default function Home() {
   const [selectedState, setSelectedState] = useState<string | null>(null)
   const [showChat, setShowChat] = useState(false)
+  const [showFeedback, setShowFeedback] = useState(false)
 
   const handleStateSelect = (stateId: string) => {
     setSelectedState(stateId)
@@ -28,7 +30,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
-      <Navbar />
+      <Navbar onOpenFeedback={() => setShowFeedback(true)} />
       <Hero onGetStarted={() => document.getElementById('states')?.scrollIntoView({ behavior: 'smooth' })} />
 
       {/* State Picker */}
@@ -92,6 +94,7 @@ export default function Home() {
       </section>
 
       <Footer />
+      <FeedbackModal open={showFeedback} onOpenChange={setShowFeedback} />
     </main>
   )
 }
