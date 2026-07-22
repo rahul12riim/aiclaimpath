@@ -39,7 +39,7 @@ export async function POST(req: Request) {
 
     // Not available = not eligible in any state
     if (!availableForWork) {
-      return Response.json<EligibilityResult>({
+      return Response.json({
         verdict: 'unlikely',
         confidence: 90,
         reason: 'Unemployment benefits require you to be available and actively seeking work.',
@@ -47,12 +47,12 @@ export async function POST(req: Request) {
           'If your situation changes and you become available for work, file immediately',
           `Call ${state.phone} to discuss your specific circumstances`,
         ],
-      })
+      } satisfies EligibilityResult)
     }
 
     // Less than 3 months is usually insufficient
     if (employmentDuration === 'less_than_3_months') {
-      return Response.json<EligibilityResult>({
+      return Response.json({
         verdict: 'possible',
         confidence: 40,
         reason: 'Most states require a minimum earnings history. Under 3 months may be insufficient, but it depends on your total wages.',
@@ -61,16 +61,16 @@ export async function POST(req: Request) {
           `Visit ${state.portalUrl} to start your application`,
           `Call ${state.phone} to ask about minimum earnings requirements`,
         ],
-      })
+      } satisfies EligibilityResult)
     }
 
     // Strong qualifying reasons
     if (['layoff', 'reduced_hours', 'contract_ended', 'company_closed'].includes(separationReason)) {
       const estimate = `$${state.minWeeklyBenefit}–$${state.maxWeeklyBenefit}`
-      return Response.json<EligibilityResult>({
+      return Response.json({
         verdict: 'likely',
         confidence: 90,
-        reason: `${separationReason === 'layoff' ? 'Being laid off' : separationReason === 'reduced_hours' ? 'Having your hours significantly reduced' : separationReason === 'contract_ended' ? 'Your contract ending' : 'Your company closing'} is a qualifying reason in ${state.name}.`,
+        reason: `${separationReason === 'layoff' ? 'Being laid off' : separationReason === 'reduced_hours' ? 'Having your hours significantly reduced' : separationReason === 'contract_ended' ? 'Your contract ending' : 'Your company closing'} often qualifies for unemployment benefits.`,
         estimatedWeeklyBenefit: estimate,
         nextSteps: [
           `File within ${state.filingDeadlineDays} days of your last day of work`,
@@ -78,12 +78,12 @@ export async function POST(req: Request) {
           `Start your application at ${state.portalUrl}`,
           `Expected benefit: ${estimate} for up to ${state.maxDurationWeeks} weeks`,
         ],
-      })
+      } satisfies EligibilityResult)
     }
 
     // Possible qualifying reasons
     if (separationReason === 'quit_good_cause') {
-      return Response.json<EligibilityResult>({
+      return Response.json({
         verdict: 'possible',
         confidence: 60,
         reason: 'Quitting for "good cause" can qualify — but the agency will evaluate your specific reason. Examples: unsafe working conditions, harassment, significant pay cut.',
@@ -93,11 +93,11 @@ export async function POST(req: Request) {
           `Visit ${state.portalUrl} to apply`,
           'Our AI can help you craft your explanation',
         ],
-      })
+      } satisfies EligibilityResult)
     }
 
     if (separationReason === 'fired') {
-      return Response.json<EligibilityResult>({
+      return Response.json({
         verdict: 'possible',
         confidence: 45,
         reason: 'Being fired can qualify if it was not for "misconduct." Performance issues, downsizing disguised as termination, or disagreements often qualify.',
@@ -107,10 +107,10 @@ export async function POST(req: Request) {
           'Our AI can help you prepare your statement',
           `Call ${state.phone} if you have questions about your situation`,
         ],
-      })
+      } satisfies EligibilityResult)
     }
 
-    return Response.json<EligibilityResult>({
+    return Response.json({
       verdict: 'more_info_needed',
       confidence: 50,
       reason: 'Your situation needs more context to assess. File your claim anyway — the agency will make the official determination.',
@@ -119,7 +119,7 @@ export async function POST(req: Request) {
         'Use our AI chat to walk through your specific situation',
         `Call ${state.phone} for a direct assessment`,
       ],
-    })
+    } satisfies EligibilityResult)
   } catch (error) {
     console.error('[Eligibility API] Error:', error)
     return Response.json({ error: 'Something went wrong' }, { status: 500 })
