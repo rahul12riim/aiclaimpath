@@ -39,7 +39,7 @@ export async function POST(req: Request) {
 
     // Not available = not eligible in any state
     if (!availableForWork) {
-      return Response.json<EligibilityResult>({
+      return Response.json({
         verdict: 'unlikely',
         confidence: 90,
         reason: 'Unemployment benefits require you to be available and actively seeking work.',
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
 
     // Less than 3 months is usually insufficient
     if (employmentDuration === 'less_than_3_months') {
-      return Response.json<EligibilityResult>({
+      return Response.json({
         verdict: 'possible',
         confidence: 40,
         reason: 'Most states require a minimum earnings history. Under 3 months may be insufficient, but it depends on your total wages.',
@@ -67,7 +67,7 @@ export async function POST(req: Request) {
     // Strong qualifying reasons
     if (['layoff', 'reduced_hours', 'contract_ended', 'company_closed'].includes(separationReason)) {
       const estimate = `$${state.minWeeklyBenefit}–$${state.maxWeeklyBenefit}`
-      return Response.json<EligibilityResult>({
+      return Response.json({
         verdict: 'likely',
         confidence: 90,
         reason: `${separationReason === 'layoff' ? 'Being laid off' : separationReason === 'reduced_hours' ? 'Having your hours significantly reduced' : separationReason === 'contract_ended' ? 'Your contract ending' : 'Your company closing'} is a qualifying reason in ${state.name}.`,
@@ -83,7 +83,7 @@ export async function POST(req: Request) {
 
     // Possible qualifying reasons
     if (separationReason === 'quit_good_cause') {
-      return Response.json<EligibilityResult>({
+      return Response.json({
         verdict: 'possible',
         confidence: 60,
         reason: 'Quitting for "good cause" can qualify — but the agency will evaluate your specific reason. Examples: unsafe working conditions, harassment, significant pay cut.',
@@ -97,7 +97,7 @@ export async function POST(req: Request) {
     }
 
     if (separationReason === 'fired') {
-      return Response.json<EligibilityResult>({
+      return Response.json({
         verdict: 'possible',
         confidence: 45,
         reason: 'Being fired can qualify if it was not for "misconduct." Performance issues, downsizing disguised as termination, or disagreements often qualify.',
@@ -110,7 +110,7 @@ export async function POST(req: Request) {
       })
     }
 
-    return Response.json<EligibilityResult>({
+    return Response.json({
       verdict: 'more_info_needed',
       confidence: 50,
       reason: 'Your situation needs more context to assess. File your claim anyway — the agency will make the official determination.',
