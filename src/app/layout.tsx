@@ -19,24 +19,17 @@ const dmSerif = DM_Serif_Display({
 })
 
 export const metadata: Metadata = {
-  title: 'AIWorkforce — File Unemployment the Easy Way',
-  description: 'AI-powered guide to filing unemployment insurance in all 50 states. Get personalized help, eligibility checks, and direct links to your state portal.',
-  keywords: ['unemployment', 'unemployment insurance', 'file unemployment', 'unemployment help', 'AI unemployment guide'],
+  title: 'File Your Unemployment Claim Online — Free AI Guide for All 50 States',
+  description: 'File an unemployment claim in your state with step-by-step AI guidance. Check eligibility, find your state portal, and get help fast. Free, private, no signup.',
+  keywords: ['unemployment claim', 'file unemployment claim', 'unemployment insurance claim', 'how to file for unemployment'],
   openGraph: {
-    title: 'AIWorkforce — File Unemployment the Easy Way',
-    description: 'AI-powered unemployment filing guide for all 50 states. Free, private, no account needed.',
+    title: 'File Your Unemployment Claim Online — Free AI Guide for All 50 States',
+    description: 'File an unemployment claim in your state with step-by-step AI guidance. Check eligibility, find your state portal, and get help fast. Free, private, no signup.',
     type: 'website',
     url: 'https://aiworkforce.com',
   },
   twitter: { card: 'summary_large_image', title: 'AIWorkforce', description: 'File unemployment with AI guidance. Free, private, fast.' },
   robots: { index: true, follow: true },
-}
-
-export const metadata: Metadata = {
-  title: 'File Your Unemployment Claim Online — Free AI Guide for All 50 States',
-  description: 'File an unemployment claim in your state with step-by-step AI guidance. Check eligibility, find your state portal, and get help fast. Free, private, no signup.',
-  keywords: ['unemployment claim', 'file unemployment claim', 'unemployment insurance claim', 'how to file for unemployment'],
-  ...
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
