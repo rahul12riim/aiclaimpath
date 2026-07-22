@@ -9,6 +9,15 @@ import EligibilityChecker from '@/components/ui/EligibilityChecker'
 import ChatWindow from '@/components/chat/ChatWindow'
 import FeatureGrid from '@/components/ui/FeatureGrid'
 import Footer from '@/components/layout/Footer'
+import FeedbackModal from '@/components/ui/FeedbackModal'
+
+// ...then in the JSX, before <Footer />:
+<section className="py-16 px-6 bg-gray-50">
+  <div className="max-w-6xl mx-auto flex flex-col items-center">
+    <p className="section-label mb-3">Help us improve</p>
+    <FeedbackModal />
+  </div>
+</section>
 
 // Stable session ID for rate limiting (not stored, not linked to identity)
 const SESSION_ID = uuidv4()
