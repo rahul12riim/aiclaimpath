@@ -9,7 +9,7 @@ import EligibilityChecker from '@/components/ui/EligibilityChecker'
 import ChatWindow from '@/components/chat/ChatWindow'
 import FeatureGrid from '@/components/ui/FeatureGrid'
 import Footer from '@/components/layout/Footer'
-import FeedbackModal from '@/app/feedback/page'
+import FeedbackModal from '@/components/ui/FeedbackModal'
 
 // Stable session ID for rate limiting (not stored, not linked to identity)
 const SESSION_ID = uuidv4()
