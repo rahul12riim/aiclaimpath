@@ -2,7 +2,6 @@
 import type { Metadata } from 'next'
 import { DM_Sans, DM_Serif_Display } from 'next/font/google'
 import { GoogleAnalytics } from '@next/third-parties/google'
-import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 const dmSans = DM_Sans({
@@ -20,12 +19,12 @@ const dmSerif = DM_Serif_Display({
 })
 
 export const metadata: Metadata = {
-  title: 'File Your Unemployment Claim Online — Free AI Guide for All 50 States',
-  description: 'File an unemployment claim in your state with step-by-step AI guidance. Check eligibility, find your state portal, and get help fast. Free, private, no signup.',
-  keywords: ['unemployment claim', 'file unemployment claim', 'unemployment insurance claim', 'how to file for unemployment'],
+  title: 'AIWorkforce — File Unemployment the Easy Way',
+  description: 'AI-powered guide to filing unemployment insurance in all 50 states. Get personalized help, eligibility checks, and direct links to your state portal.',
+  keywords: ['unemployment', 'unemployment insurance', 'file unemployment', 'unemployment help', 'AI unemployment guide'],
   openGraph: {
-    title: 'File Your Unemployment Claim Online — Free AI Guide for All 50 States',
-    description: 'File an unemployment claim in your state with step-by-step AI guidance. Check eligibility, find your state portal, and get help fast. Free, private, no signup.',
+    title: 'AIWorkforce — File Unemployment the Easy Way',
+    description: 'AI-powered unemployment filing guide for all 50 states. Free, private, no account needed.',
     type: 'website',
     url: 'https://aiworkforce.com',
   },
@@ -33,12 +32,18 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 }
 
+export const metadata: Metadata = {
+  title: 'File Your Unemployment Claim Online — Free AI Guide for All 50 States',
+  description: 'File an unemployment claim in your state with step-by-step AI guidance. Check eligibility, find your state portal, and get help fast. Free, private, no signup.',
+  keywords: ['unemployment claim', 'file unemployment claim', 'unemployment insurance claim', 'how to file for unemployment'],
+  ...
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${dmSans.variable} ${dmSerif.variable}`}>
       <body className="font-sans antialiased bg-white text-gray-900">
         {children}
-        <Analytics />
       </body>
       <GoogleAnalytics gaId="G-RTPFY49N0F" />
     </html>
